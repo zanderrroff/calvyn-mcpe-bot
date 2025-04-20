@@ -4,7 +4,6 @@ use std::io;
 
 fn main() -> io::Result<()> {
     let cfg = parse_args();
-    eprintln!("debug: version={}, host={}", VER, cfg.host);
 
     if cfg.host.is_empty() {
         return Ok(());
