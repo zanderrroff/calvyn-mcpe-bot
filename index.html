@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omi — Omi Spark by Calvyn</title>
+<style>
+  :root {
+    --color-ink-black: #0d0d0d;
+    --color-paper: #f9f9f9;
+    --color-snow: #ffffff;
+    --color-smoke: #5d5d5d;
+    --color-ash: #8f8f8f;
+    --color-fog: #ececec;
+
+    --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+    --radius: 10px;
+
+    --sidebar-w: 260px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  body {
+    font-family: var(--font-ui);
+    font-feature-settings: "liga" 0;
+    color: var(--color-ink-black);
+    background: var(--color-snow);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex: 0 0 var(--sidebar-w);
+    background: var(--color-paper);
+    display: flex;
+    flex-direction: column;
+    padding: 12px 8px;
+    height: 100%;
+  }
+
+  .sidebar-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px 12px;
+  }
+
+  .collapse-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-ink-black);
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.2px;
+  }
+
+  .logo-mark {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-ink-black);
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .nav-item svg { width: 16px; height: 16px; flex: 0 0 auto; }
+
+  .nav-item:hover,
+  .nav-item.active {
+    background: var(--color-fog);
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .promo {
+    font-size: 14px;
+    color: var(--color-smoke);
+  }
+
+  .promo .muted { color: var(--color-ash); display: block; }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-ink-black);
+    background: transparent;
+    color: var(--color-ink-black);
+    border-radius: var(--radius);
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+  }
+
+  .footer-links a {
+    color: var(--color-ash);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--color-ink-black); }
+
+  /* ---------- Main ---------- */
+  .main {
+    flex: 1 1 auto;
+    background: var(--color-snow);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hamburger {
+    display: none;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+
+  .wordmark {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.27px;
+  }
+  .wordmark .model { color: var(--color-ash); font-weight: 400; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-dark {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--color-ink-black);
+    color: var(--color-snow);
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .link-plain {
+    color: var(--color-ink-black);
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: none;
+    padding: 8px 8px;
+    white-space: nowrap;
+  }
+
+  .stage {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 24px;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .stage-inner {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 8vh;
+  }
+
+  .greeting {
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+    margin: 0 0 24px;
+    color: var(--color-ink-black);
+  }
+
+  /* ---------- Prompt input ---------- */
+  .prompt {
+    width: 100%;
+    background: var(--color-snow);
+    border: 1px solid var(--color-fog);
+    border-radius: 28px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--color-ink-black);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex: 0 0 auto;
+    border-radius: 8px;
+  }
+  .icon-btn:hover { background: var(--color-fog); }
+  .icon-btn svg { width: 20px; height: 20px; }
+
+  .prompt-input {
+    flex: 1 1 auto;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--color-ink-black);
+    background: transparent;
+    min-width: 0;
+  }
+  .prompt-input::placeholder { color: var(--color-ash); }
+
+  .voice-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--color-ink-black);
+    color: var(--color-snow);
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    flex: 0 0 auto;
+  }
+  .voice-btn svg { width: 16px; height: 16px; }
+
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .chip {
+    border: 1px solid var(--color-fog);
+    background: var(--color-snow);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    font-size: 14px;
+    color: var(--color-smoke);
+    cursor: pointer;
+  }
+  .chip:hover { background: var(--color-fog); color: var(--color-ink-black); }
+
+  .terms {
+    text-align: center;
+    font-size: 12px;
+    color: var(--color-ash);
+    padding: 12px 20px;
+  }
+  .terms a { color: var(--color-smoke); }
+
+  /* ---------- Overlay for mobile sidebar ---------- */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,13,13,0.35);
+    z-index: 40;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 0.22s ease;
+      box-shadow: 0 0 0 100vmax rgba(0,0,0,0);
+    }
+    body.nav-open .sidebar { transform: translateX(0); }
+    body.nav-open .overlay { display: block; }
+
+    .hamburger { display: inline-flex; align-items: center; justify-content: center; }
+
+    .header { padding: 10px 14px; }
+
+    .header-right .link-plain { display: none; }
+    .btn-dark { padding: 8px 14px; font-size: 14px; }
+
+    .greeting { font-size: 22px; }
+
+    .prompt { border-radius: 24px; padding: 12px; }
+    .voice-btn .voice-label { display: none; }
+    .voice-btn { padding: 8px; }
+
+    .stage-inner { margin-bottom: 4vh; }
+  }
+</style>
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <svg class="collapse-icon" id="collapseBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <span class="sidebar-logo">
+          <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/>
+          </svg>
+          Omi
+        </span>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
+          Новый чат
+        </a>
+        <a class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Поиск по чатам
+        </a>
+        <a class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Изображения
+        </a>
+        <a class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Приложения
+        </a>
+        <a class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+          Глубокий анализ
+        </a>
+        <a class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8.5c0-2.5-2-4.5-4.5-4.5-1.7 0-3.2 1-4 2.4-.8-1.4-2.3-2.4-4-2.4C2 4 0 6 0 8.5 0 14 8 19 8 19s8-5 8-10.5z" transform="translate(4 1)"/></svg>
+          Здоровье
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn-outline">Войти</button>
+        <div class="promo">
+          Получайте ответы, подобранные лично для вас
+          <span class="muted">Войдите, чтобы открыть все возможности Omi Spark</span>
+        </div>
+        <div class="footer-links">
+          <a href="#">Настройки</a>
+          <a href="#">Помощь</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="header">
+        <div class="header-left">
+          <svg class="hamburger" id="hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <span class="wordmark">Omi <span class="model">Spark</span></span>
+        </div>
+        <div class="header-right">
+          <button class="btn-dark">Войти</button>
+          <a class="link-plain" href="#">Зарегистрироваться бесплатно</a>
+        </div>
+      </header>
+
+      <section class="stage">
+        <div class="stage-inner">
+          <h1 class="greeting">С чего начнём?</h1>
+
+          <div class="prompt">
+            <button class="icon-btn" title="Прикрепить">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <input class="prompt-input" type="text" placeholder="Спросите что угодно" />
+            <button class="voice-btn" title="Голос">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="4" y1="10" x2="4" y2="14"/><line x1="8" y1="7" x2="8" y2="17"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="16" y1="7" x2="16" y2="17"/><line x1="20" y1="10" x2="20" y2="14"/>
+              </svg>
+              <span class="voice-label">Голос</span>
+            </button>
+          </div>
+
+          <div class="suggestions">
+            <button class="chip">Объясни простыми словами</button>
+            <button class="chip">Напиши код</button>
+            <button class="chip">Составь план</button>
+            <button class="chip">Придумай идею</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="terms">
+        Omi Spark может допускать ошибки. Проверяйте важную информацию. ·
+        <a href="#">Условия</a> · <a href="#">Конфиденциальность</a> · Calvyn
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var body = document.body;
+    var hamburger = document.getElementById('hamburger');
+    var overlay = document.getElementById('overlay');
+    var collapseBtn = document.getElementById('collapseBtn');
+
+    function openNav() { body.classList.add('nav-open'); }
+    function closeNav() { body.classList.remove('nav-open'); }
+
+    hamburger.addEventListener('click', openNav);
+    overlay.addEventListener('click', closeNav);
+    collapseBtn.addEventListener('click', closeNav);
+
+    // close on nav item tap (mobile)
+    document.querySelectorAll('.nav-item').forEach(function (el) {
+      el.addEventListener('click', function () {
+        if (window.matchMedia('(max-width: 768px)').matches) closeNav();
+      });
+    });
+  </script>
+</body>
+</html>
