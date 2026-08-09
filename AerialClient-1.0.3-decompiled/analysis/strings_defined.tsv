@@ -1,0 +1,698 @@
+180209870	string	0123456789abcdefghijklmnopqrstuvwxyz
+1802098a1	string	0010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+18021603d	string	MinecraftGame::update
+180216053	string	LocalPlayer::normalTick
+18021606b	string	InGamePlayScreen::render
+180216084	string	ClientInstance::onTick
+18021609b	string	GameMode::attack
+1802160ac	string	LoopbackPacketSender::send
+1802160c7	string	ClientInstance::leaveGame
+1802160e1	string	MinecraftGame::updateGraphics
+1802160ff	string	{}: null target, skipped
+18021611d	string	{}: MinHook rejected target {:#x}
+18021613f	string	teardown
+180216148	string	input poll
+180216153	string	deferred grab
+180216161	string	menu cursor
+18021616d	string	cursor heal
+180216179	string	WorldJoinEvent
+180216188	string	TickEvent
+180216192	string	GameTickEvent
+1802161a0	string	AttackEvent
+1802161ac	string	PacketSendEvent
+1802161bc	string	Present intercepted but no frames came out of it
+1802161ed	string	Render2DEvent
+180216e17	string	gStability
+180216e22	string	TextRunBuilder::appendElement
+18021dd94	string	vs_4_0
+18021dd9b	string	vs_main
+18021dda3	string	ps_4_0
+18021ddaa	string	ps_main
+18021ddb2	string	gvs_main
+18021ddbb	string	gps_main
+18021ddc4	string	POSITION
+18021ddcd	string	COLOR
+18021de20	string	\ncbuffer Params : register(b0) {\n    float4 uScreen;\n    float4 uRect;\n    float4 uColorA;\n    float4 uColorB;\n    float4 uP;    // radius, thickness, mode, gradient\n    float4 uP2;   // aa\n};\n\nTexture2D    tex : register(t0);\nSamplerState smp : register(s0);\n\nstruct VSOut { float4 pos : SV_POSITION; float2 px : TEXCOORD0; float2 uv : TEXCOORD1; };\n\nVSOut vs_main(uint id : SV_VertexID) {\n    float2 c  = float2(id & 1, (id >> 1) & 1);\n    float2 mn = uRect.xy;\n    float2 mx = uRect.zw;\n    float expand = (uP.z < 0.5) ? uP2.x : 0.0;\n    float2 p = lerp(mn - expand, mx + expand, c);\n    VSOut o;\n    o.px  = p;\n    o.uv  = c;\n    o.pos = float4(p / uScreen.xy * float2(2.0, -2.0) + float2(-1.0, 1.0), 0.0, 1.0);\n    return o;\n}\n\nfloat sdRound(float2 p, float2 h, float r) {\n    float2 q = abs(p) - h + r;\n    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;\n}\n\nfloat4 ps_main(VSOut i) : SV_TARGET {\n    float mode = uP.z;\n    if (mode > 1.5) {\n        float2 auv = lerp(uColorB.xy, uColorB.zw, i.uv);\n        float cov = tex.Sample(smp, auv).r;\n        return float4(uColorA.rgb, uColorA.a * cov);\n    }\n    if (mode > 0.5) {\n        float4 t = tex.Sample(smp, i.uv);\n        return t * uColorA;\n    }\n    float2 mn = uRect.xy;\n    float2 mx = uRect.zw;\n    float2 center = (mn + mx) * 0.5;\n    float2 half = (mx - mn) * 0.5;\n    float r = min(uP.x, min(half.x, half.y));\n    float d = sdRound(i.px - center, half, r);\n    float aa = max(uP2.x, 0.001);\n    float cov;\n    if (uP.y > 0.0)\n        cov = 1.0 - smoothstep(0.0, aa, abs(d) - uP.y * 0.5);\n    else\n        cov = 1.0 - smoothstep(-aa, 0.0, d);\n    float4 col = uColorA;\n    if (uP.w > 0.5) {\n        float t = (uP.w < 1.5) ? saturate((i.px.y - mn.y) / max(mx.y - mn.y, 0.001))\n                               : saturate((i.px.x - mn.x) / max(mx.x - mn.x, 0.001));\n        col = lerp(uColorA, uColorB, t);\n    }\n    return float4(col.rgb, col.a * cov);\n}\n\nstruct GVSIn  { float2 pos : POSITION; float4 col : COLOR; };\nstruct GVSOut { float4 pos : SV_POSITION; float4 col : COLOR; };\n\nGVSOut gvs_main(GVSIn i) {\n    GVSOut o;\n    o.pos = float4(i.pos / uScreen.xy * float2(2.0, -2.0) + float2(-1.0, 1.0), 0.0, 1.0);\n    o.col = i.col;\n    return o;\n}\n\nfloat4 gps_main(GVSOut i) : SV_TARGET { return i.col; }\n
+18021e709	string	{} failed: {}
+18021e71b	string	vector too long
+18021e72c	unicode	Segoe UI
+18021e74f	string	Hunordered_map/set too long
+18021e76b	string	invalid hash bucket count
+18021e800	string	resource {} not found in the DLL
+18021e821	string	Images
+18021e828	string	resource {} failed to decode ({:#x})
+18021e84d	string	resource {} texture creation failed
+18021e887	string	pWIC is unavailable
+18021e8d5	string	waiting for a frame
+18021e900	string	the swap chain is multisampled
+18021e91f	string	could not create the frame buffers
+18021e942	string	could not view the back buffer
+18021e977	string	@the swap chain has no D3D11 device
+18021e99b	string	the blur pipeline could not be built
+18021e9c0	string	running
+18021e9d0	string	\nstruct VSOut { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; };\n\nVSOut vs_main(uint id : SV_VertexID) {\n    VSOut output;\n    output.uv  = float2((id << 1) & 2, id & 2);\n    output.pos = float4(output.uv * float2(2.0, -2.0) + float2(-1.0, 1.0), 0.0, 1.0);\n    return output;\n}\n\ncbuffer Params : register(b0) {\n    float blend;\n    float opacity;\n    float2 padding;\n};\n\nTexture2D    sceneTexture   : register(t0);\nTexture2D    historyTexture : register(t1);\nSamplerState linearClamp    : register(s0);\n\nfloat4 ps_accumulate(VSOut input) : SV_TARGET {\n    return float4(sceneTexture.Sample(linearClamp, input.uv).rgb, blend);\n}\n\nfloat4 ps_present(VSOut input) : SV_TARGET {\n    return float4(historyTexture.Sample(linearClamp, input.uv).rgb, opacity);\n}\n
+18021ecc6	string	vertex shader failed to compile: {}
+18021ecea	string	MotionBlur
+18021ecf5	string	ps_accumulate
+18021ed03	string	ps_present
+18021ed0e	string	{} failed to compile: {}
+18021ed38	string	CreateDXGIFactory1 failed
+18021ed55	string	D3D11CreateDevice failed
+18021ed6e	string	{} ({:#x})
+18021ed79	string	CreateSwapChainForComposition failed
+18021ed9e	string	IDXGISwapChain::Present
+18021edb6	string	IDXGISwapChain1::Present1
+18021edd0	string	IDXGISwapChain::ResizeBuffers
+18021edee	string	could not detour Present
+18021ee07	string	waiting for the first frame
+18021ee23	string	renderer setup failed
+18021ee39	string	ready
+18021ee3f	string	shut down
+18021ee49	string	not installed
+18021ee57	string	motion blur
+18021ee63	string	overlay present
+18021ee73	string	overlay present1
+18021eeb6	string	HDnot loaded
+18021eec3	string	waiting for the game's texture group
+18021efc8	string	textures/environment/overworld_cubemap/cubemap_
+18021f015	string	XFM<unmapped>
+1802224d0	string	        
+180222d88	string	MH_UNKNOWN
+180222d93	string	MH_OK
+180222d99	string	MH_ERROR_ALREADY_INITIALIZED
+180222db6	string	MH_ERROR_NOT_INITIALIZED
+180222dcf	string	MH_ERROR_ALREADY_CREATED
+180222de8	string	MH_ERROR_NOT_CREATED
+180222dfd	string	MH_ERROR_ENABLED
+180222e0e	string	MH_ERROR_DISABLED
+180222e20	string	MH_ERROR_NOT_EXECUTABLE
+180222e38	string	MH_ERROR_UNSUPPORTED_FUNCTION
+180222e56	string	MH_ERROR_MEMORY_ALLOC
+180222e6c	string	MH_ERROR_MEMORY_PROTECT
+180222e84	string	MH_ERROR_MODULE_NOT_FOUND
+180222e9e	string	MH_ERROR_FUNCTION_NOT_FOUND
+180222eba	string	(unknown)
+180224098	string	bad allocation
+1802240c0	string	bad array new length
+1802240f0	string	bad function call
+180243820	unicode	kernel32.dll
+180243840	string	GetTempPath2W
+180243960	unicode	!x-sys-default-locale
+180244120	string	success
+180244128	string	address family not supported
+180244148	string	address in use
+180244158	string	address not available
+180244170	string	already connected
+180244188	string	argument list too long
+1802441a0	string	argument out of domain
+1802441b8	string	bad address
+1802441c8	string	bad file descriptor
+1802441e0	string	bad message
+1802441f0	string	broken pipe
+180244200	string	connection aborted
+180244218	string	connection already in progress
+180244238	string	connection refused
+180244250	string	connection reset
+180244268	string	cross device link
+180244280	string	destination address required
+1802442a0	string	device or resource busy
+1802442b8	string	directory not empty
+1802442d0	string	executable format error
+1802442e8	string	file exists
+1802442f8	string	file too large
+180244308	string	filename too long
+180244320	string	function not supported
+180244338	string	host unreachable
+180244350	string	identifier removed
+180244368	string	illegal byte sequence
+180244380	string	inappropriate io control operation
+1802443a8	string	interrupted
+1802443b8	string	invalid argument
+1802443d0	string	invalid seek
+1802443e0	string	io error
+1802443f0	string	is a directory
+180244400	string	message size
+180244410	string	network down
+180244420	string	network reset
+180244430	string	network unreachable
+180244448	string	no buffer space
+180244458	string	no child process
+180244470	string	no link
+180244478	string	no lock available
+180244490	string	no message available
+1802444a8	string	no message
+1802444b8	string	no protocol option
+1802444d0	string	no space on device
+1802444e8	string	no stream resources
+180244500	string	no such device or address
+180244520	string	no such device
+180244530	string	no such file or directory
+180244550	string	no such process
+180244560	string	not a directory
+180244570	string	not a socket
+180244580	string	not a stream
+180244590	string	not connected
+1802445a0	string	not enough memory
+1802445b8	string	not supported
+1802445c8	string	operation canceled
+1802445e0	string	operation in progress
+1802445f8	string	operation not permitted
+180244610	string	operation not supported
+180244628	string	operation would block
+180244640	string	owner dead
+180244650	string	permission denied
+180244668	string	protocol error
+180244678	string	protocol not supported
+180244690	string	read only file system
+1802446a8	string	resource deadlock would occur
+1802446c8	string	resource unavailable try again
+1802446e8	string	result out of range
+180244700	string	state not recoverable
+180244718	string	stream timeout
+180244728	string	text file busy
+180244738	string	timed out
+180244748	string	too many files open in system
+180244768	string	too many files open
+180244780	string	too many links
+180244790	string	too many symbolic link levels
+1802447b0	string	value too large
+1802447c0	string	wrong protocol type
+1802447d8	string	unknown error
+180244908	unicode	w+bx
+1802449d8	unicode	icu.dll
+1802449e8	string	ucal_close
+1802449f8	string	ucal_get
+180244a08	string	ucal_getCanonicalTimeZoneID
+180244a28	string	ucal_getDefaultTimeZone
+180244a40	string	ucal_getTimeZoneDisplayName
+180244a60	string	ucal_getTimeZoneTransitionDate
+180244a80	string	ucal_getTZDataVersion
+180244a98	string	ucal_inDaylightTime
+180244ab0	string	ucal_open
+180244ac0	string	ucal_openTimeZoneIDEnumeration
+180244ae0	string	ucal_setMillis
+180244af0	string	uenum_close
+180244b00	string	uenum_count
+180244b10	string	uenum_unext
+180244b20	unicode	SYSTEM\CurrentControlSet\Control\LeapSecondInformation
+180244b90	unicode	LeapSeconds
+180244d68	string	GetSystemTimePreciseAsFileTime
+180244eb8	string	0123456789abcdefghijklmnopqrstuvwxyz
+180244f08	string	0123456789abcdefghijklmnopqrstuvwxyz
+1802450d8	string	bad exception
+180245800	string	__based(
+180245810	string	__cdecl
+180245818	string	__stdcall
+180245828	string	__thiscall
+180245838	string	__fastcall
+180245848	string	__vectorcall
+180245858	string	__preserve_none
+180245868	string	__clrcall
+180245880	string	__swift_1
+180245890	string	__swift_2
+1802458a0	string	__swift_3
+1802458b8	string	__restrict
+1802458c8	string	__unaligned
+1802458d8	string	restrict(
+1802458f0	string	 delete
+180245918	string	operator
+180245998	string	`vftable'
+1802459a8	string	`vbtable'
+1802459d0	string	`local static guard'
+1802459e8	string	`string'
+1802459f8	string	`vbase destructor'
+180245a10	string	`vector deleting destructor'
+180245a30	string	`default constructor closure'
+180245a50	string	`scalar deleting destructor'
+180245a70	string	`vector constructor iterator'
+180245a90	string	`vector destructor iterator'
+180245ab0	string	`vector vbase constructor iterator'
+180245ad8	string	`virtual displacement map'
+180245af8	string	`eh vector constructor iterator'
+180245b20	string	`eh vector destructor iterator'
+180245b40	string	`eh vector vbase constructor iterator'
+180245b68	string	`copy constructor closure'
+180245b88	string	`udt returning'
+180245ba8	string	`local vftable'
+180245bb8	string	`local vftable constructor closure'
+180245be8	string	 delete[]
+180245bf8	string	`omni callsig'
+180245c08	string	`placement delete closure'
+180245c28	string	`placement delete[] closure'
+180245c48	string	`managed vector constructor iterator'
+180245c70	string	`managed vector destructor iterator'
+180245c98	string	`eh vector copy constructor iterator'
+180245cc0	string	`eh vector vbase copy constructor iterator'
+180245cf0	string	`dynamic initializer for '
+180245d10	string	`dynamic atexit destructor for '
+180245d38	string	`vector copy constructor iterator'
+180245d60	string	`vector vbase copy constructor iterator'
+180245d90	string	`managed vector copy constructor iterator'
+180245dc0	string	`local static thread guard'
+180245de0	string	operator "" 
+180245df0	string	operator co_await
+180245e08	string	operator<=>
+180245e18	string	 Type Descriptor'
+180245e30	string	 Base Class Descriptor at (
+180245e50	string	 Base Class Array'
+180245e68	string	 Class Hierarchy Descriptor'
+180245e88	string	 Complete Object Locator'
+180245ea8	string	`anonymous namespace'
+180245ed8	unicode	api-ms-win-core-fibers-l1-1-1
+180245f18	unicode	api-ms-win-core-synch-l1-2-0
+180245f58	unicode	kernel32
+180245f70	unicode	api-ms-
+180245f88	string	FlsAlloc
+180245fa0	string	FlsFree
+180245fb0	string	FlsGetValue
+180245fc8	string	FlsSetValue
+180245fe0	string	InitializeCriticalSectionEx
+180246250	unicode	(null)
+180246260	string	(null)
+180246db0	unicode	minkernel\crts\ucrt\inc\corecrt_internal_strtox.h
+180246e20	unicode	__crt_strtox::floating_point_value::as_double
+180246e80	unicode	_is_double
+180246ea0	unicode	__crt_strtox::floating_point_value::as_float
+180246f00	unicode	!_is_double
+180246f20	string	INITY
+180246f28	string	inity
+180247858	string	fmodf
+180247c50	unicode	am/pm
+180247db8	unicode	mscoree.dll
+180247dd0	string	CorExitProcess
+180248850	unicode	LC_ALL
+180248860	unicode	LC_COLLATE
+180248878	unicode	LC_CTYPE
+180248890	unicode	LC_MONETARY
+1802488a8	unicode	LC_NUMERIC
+1802488c0	unicode	LC_TIME
+180248bdc	string	Sunday
+180248be4	string	Monday
+180248bf0	string	Tuesday
+180248bf8	string	Wednesday
+180248c08	string	Thursday
+180248c14	string	Friday
+180248c20	string	Saturday
+180248c60	string	January
+180248c68	string	February
+180248c74	string	March
+180248c7c	string	April
+180248c94	string	August
+180248ca0	string	September
+180248cb0	string	October
+180248cb8	string	November
+180248cc8	string	December
+180248ce0	string	MM/dd/yy
+180248cf0	string	dddd, MMMM dd, yyyy
+180248d08	string	HH:mm:ss
+180248d50	unicode	Sunday
+180248d60	unicode	Monday
+180248d70	unicode	Tuesday
+180248d80	unicode	Wednesday
+180248d98	unicode	Thursday
+180248db0	unicode	Friday
+180248dc0	unicode	Saturday
+180248e38	unicode	January
+180248e48	unicode	February
+180248e60	unicode	March
+180248e70	unicode	April
+180248e80	unicode	June
+180248e90	unicode	July
+180248ea0	unicode	August
+180248eb0	unicode	September
+180248ec8	unicode	October
+180248ed8	unicode	November
+180248ef0	unicode	December
+180248f18	unicode	MM/dd/yy
+180248f30	unicode	dddd, MMMM dd, yyyy
+180248f58	unicode	HH:mm:ss
+180248f70	unicode	en-US
+180249070	unicode	api-ms-win-core-datetime-l1-1-1
+1802490b0	unicode	api-ms-win-core-fibers-l1-1-2
+1802490f0	unicode	api-ms-win-core-file-l1-2-4
+180249128	unicode	api-ms-win-core-file-l1-2-2
+180249160	unicode	api-ms-win-core-file-l2-1-4
+1802491a0	unicode	api-ms-win-core-localization-l1-2-1
+1802491f0	unicode	api-ms-win-core-localization-obsolete-l1-2-0
+180249250	unicode	api-ms-win-core-processthreads-l1-1-2
+1802492a0	unicode	api-ms-win-core-string-l1-1-0
+1802492e0	unicode	api-ms-win-core-sysinfo-l1-2-1
+180249320	unicode	api-ms-win-core-winrt-l1-1-0
+180249360	unicode	api-ms-win-core-xstate-l2-1-0
+1802493a0	unicode	api-ms-win-rtcore-ntuser-window-l1-1-0
+1802493f0	unicode	api-ms-win-security-systemfunctions-l1-1-0
+180249450	unicode	ext-ms-win-ntuser-dialogbox-l1-1-0
+1802494a0	unicode	ext-ms-win-ntuser-windowstation-l1-1-0
+1802494f0	unicode	advapi32
+180249508	unicode	kernelbase
+180249520	unicode	ntdll
+180249530	unicode	api-ms-win-appmodel-runtime-l1-1-2
+180249578	unicode	user32
+180249588	unicode	ext-ms-
+1802495a0	string	AreFileApisANSI
+1802495b8	string	CompareStringEx
+1802495d0	string	EnumSystemLocalesEx
+1802495f0	string	FlsGetValue2
+180249608	string	GetDateFormatEx
+180249620	string	GetLocaleInfoEx
+180249638	string	GetTimeFormatEx
+180249650	string	GetUserDefaultLocaleName
+180249678	string	IsValidLocaleName
+180249698	string	LCMapStringEx
+1802496b0	string	LCIDToLocaleName
+1802496d0	string	LocaleNameToLCID
+1802496e8	string	AppPolicyGetProcessTerminationMethod
+1802497a0	string	NAN(SNAN)
+1802497b0	string	nan(snan)
+1802497c0	string	NAN(IND)
+1802497d0	string	nan(ind)
+1802497dc	string	e+000
+180249a0c	string	log10
+180249a68	string	floor
+180249ac0	string	_nextafter
+18024a830	unicode	UTF-8
+18024a840	unicode	UTF-16LEUNICODE
+18024a888	unicode	ja-JP
+18024a898	unicode	zh-CN
+18024a8a8	unicode	ko-KR
+18024a8b8	unicode	zh-TW
+18024ae88	unicode	american
+18024aea0	unicode	american english
+18024aec8	unicode	american-english
+18024aef0	unicode	australian
+18024af08	unicode	belgian
+18024af18	unicode	canadian
+18024af40	unicode	chinese
+18024af50	unicode	chinese-hongkong
+18024af78	unicode	chinese-simplified
+18024afa0	unicode	chinese-singapore
+18024afc8	unicode	chinese-traditional
+18024aff0	unicode	dutch-belgian
+18024b010	unicode	english-american
+18024b038	unicode	english-aus
+18024b050	unicode	english-belize
+18024b070	unicode	english-can
+18024b088	unicode	english-caribbean
+18024b0b0	unicode	english-ire
+18024b0c8	unicode	english-jamaica
+18024b0e8	unicode	english-nz
+18024b100	unicode	english-south africa
+18024b130	unicode	english-trinidad y tobago
+18024b168	unicode	english-uk
+18024b180	unicode	english-us
+18024b198	unicode	english-usa
+18024b1b0	unicode	french-belgian
+18024b1d0	unicode	french-canadian
+18024b1f0	unicode	french-luxembourg
+18024b218	unicode	french-swiss
+18024b238	unicode	german-austrian
+18024b258	unicode	german-lichtenstein
+18024b280	unicode	german-luxembourg
+18024b2a8	unicode	german-swiss
+18024b2c8	unicode	irish-english
+18024b2e8	unicode	italian-swiss
+18024b308	unicode	norwegian
+18024b320	unicode	norwegian-bokmal
+18024b348	unicode	norwegian-nynorsk
+18024b370	unicode	portuguese-brazilian
+18024b3a0	unicode	spanish-argentina
+18024b3c8	unicode	spanish-bolivia
+18024b3e8	unicode	spanish-chile
+18024b408	unicode	spanish-colombia
+18024b430	unicode	spanish-costa rica
+18024b458	unicode	spanish-dominican republic
+18024b490	unicode	spanish-ecuador
+18024b4b0	unicode	spanish-el salvador
+18024b4d8	unicode	spanish-guatemala
+18024b500	unicode	spanish-honduras
+18024b528	unicode	spanish-mexican
+18024b548	unicode	spanish-modern
+18024b568	unicode	spanish-nicaragua
+18024b590	unicode	spanish-panama
+18024b5b0	unicode	spanish-paraguay
+18024b5d8	unicode	spanish-peru
+18024b5f8	unicode	spanish-puerto rico
+18024b620	unicode	spanish-uruguay
+18024b640	unicode	spanish-venezuela
+18024b668	unicode	swedish-finland
+18024b688	unicode	swiss
+18024b6b0	unicode	america
+18024b6c0	unicode	britain
+18024b6d0	unicode	china
+18024b6f0	unicode	england
+18024b700	unicode	great britain
+18024b720	unicode	holland
+18024b730	unicode	hong-kong
+18024b748	unicode	new-zealand
+18024b768	unicode	pr china
+18024b780	unicode	pr-china
+18024b798	unicode	puerto-rico
+18024b7c0	unicode	south africa
+18024b7e0	unicode	south korea
+18024b7f8	unicode	south-africa
+18024b818	unicode	south-korea
+18024b830	unicode	trinidad & tobago
+18024b858	unicode	united-kingdom
+18024b878	unicode	united-states
+18024b898	unicode	utf8
+18024b8b0	unicode	utf-8
+18024c980	unicode	de-DE
+18024cb00	unicode	sl-SI
+18024cc08	unicode	hi-IN
+18024cca0	unicode	bn-IN
+18024ccb0	unicode	pa-IN
+18024ccd0	unicode	ta-IN
+18024cce0	unicode	te-IN
+18024ccf0	unicode	kn-IN
+18024cd20	unicode	sa-IN
+18024cdd0	unicode	de-CH
+18024ce50	unicode	sr-SP-Latn
+18024ce90	unicode	se-SE
+18024cef8	unicode	de-AT
+18024cf38	unicode	sr-SP-Cyrl
+18024cfc0	unicode	fr-CH
+18024d010	unicode	de-LI
+18024d050	unicode	bs-BA-Latn
+18024d0b8	unicode	sr-BA-Latn
+18024e2d0	unicode	bn-in
+18024e2e0	unicode	bs-ba-latn
+18024e338	unicode	de-at
+18024e348	unicode	de-ch
+18024e358	unicode	de-de
+18024e368	unicode	de-li
+18024e618	unicode	fr-ch
+18024e688	unicode	hi-in
+18024e748	unicode	kn-in
+18024e878	unicode	pa-in
+18024e908	unicode	sa-in
+18024e938	unicode	se-se
+18024e958	unicode	sl-si
+18024e9f0	unicode	sr-ba-latn
+18024ea08	unicode	sr-sp-cyrl
+18024ea20	unicode	sr-sp-latn
+18024ea78	unicode	ta-in
+18024ea88	unicode	te-in
+18024ebc8	string	1#INF
+18024ebd0	string	1#QNAN
+18024ebd8	string	1#SNAN
+18024ebe0	string	1#IND
+18024ebe8	unicode	CONOUT$
+180251574	string	.rdata
+1802515c0	string	.rdata$voltmd
+1802516e8	string	.data
+18025172c	string	.pdata
+18025173c	string	.fptable
+18026e98a	TerminatedCString	MessageBoxW
+18026e998	TerminatedCString	GetSystemMetrics
+18026e9ac	TerminatedCString	GetClientRect
+18026e9bc	TerminatedCString	SetWindowsHookExW
+18026e9d0	TerminatedCString	CallNextHookEx
+18026e9e2	TerminatedCString	UnhookWindowsHookEx
+18026e9f8	TerminatedCString	GetAsyncKeyState
+18026ea0c	TerminatedCString	GetKeyboardState
+18026ea20	TerminatedCString	GetCursorPos
+18026ea30	TerminatedCString	MapVirtualKeyExW
+18026ea44	TerminatedCString	ToUnicodeEx
+18026ea52	TerminatedCString	GetKeyState
+18026ea60	TerminatedCString	GetKeyboardLayout
+18026ea74	TerminatedCString	MapVirtualKeyW
+18026ea86	TerminatedCString	GetKeyNameTextW
+18026ea98	TerminatedCString	IsWindow
+18026eaa4	TerminatedCString	EnumWindows
+18026eab2	TerminatedCString	GetClassNameW
+18026eac2	TerminatedCString	IsWindowVisible
+18026ead4	TerminatedCString	EnumChildWindows
+18026eae8	TerminatedCString	GetWindowThreadProcessId
+18026eb04	TerminatedCString	GetForegroundWindow
+18026eb1a	TerminatedCString	AttachThreadInput
+18026eb2e	TerminatedCString	ScreenToClient
+18026eb40	TerminatedCString	wsprintfW
+18026eb4a	TerminatedCString	USER32.dll
+18026eb58	TerminatedCString	SHGetKnownFolderPath
+18026eb6e	TerminatedCString	SHELL32.dll
+18026eb7c	TerminatedCString	CoTaskMemFree
+18026eb8c	TerminatedCString	CoInitializeEx
+18026eb9e	TerminatedCString	CoCreateInstance
+18026ebb0	TerminatedCString	ole32.dll
+18026ebbc	TerminatedCString	PlaySoundW
+18026ebc8	TerminatedCString	WINMM.dll
+18026ebd4	TerminatedCString	DWriteCreateFactory
+18026ebe8	TerminatedCString	DWrite.dll
+18026ebf6	TerminatedCString	D3D11CreateDevice
+18026ec08	TerminatedCString	d3d11.dll
+18026ec14	TerminatedCString	CreateDXGIFactory1
+18026ec28	TerminatedCString	dxgi.dll
+18026ec34	TerminatedCString	D3DCompile
+18026ec40	TerminatedCString	D3DCOMPILER_47.dll
+18026ec56	TerminatedCString	GetModuleFileNameW
+18026ec6c	TerminatedCString	Sleep
+18026ec74	TerminatedCString	GetCurrentProcessId
+18026ec8a	TerminatedCString	Thread32First
+18026ec9a	TerminatedCString	Thread32Next
+18026ecaa	TerminatedCString	CloseHandle
+18026ecb8	TerminatedCString	GetTickCount64
+18026ecca	TerminatedCString	CreateToolhelp32Snapshot
+18026ece6	TerminatedCString	GetCurrentThreadId
+18026ecfc	TerminatedCString	WideCharToMultiByte
+18026ed12	TerminatedCString	GetSystemInfo
+18026ed22	TerminatedCString	VirtualAlloc
+18026ed32	TerminatedCString	GetModuleHandleExW
+18026ed48	TerminatedCString	FindResourceW
+18026ed58	TerminatedCString	SizeofResource
+18026ed6a	TerminatedCString	LoadResource
+18026ed7a	TerminatedCString	LockResource
+18026ed8a	TerminatedCString	QueryPerformanceCounter
+18026eda4	TerminatedCString	QueryPerformanceFrequency
+18026edc0	TerminatedCString	AddVectoredExceptionHandler
+18026edde	TerminatedCString	RtlCaptureStackBackTrace
+18026edfa	TerminatedCString	RemoveVectoredExceptionHandler
+18026ee1c	TerminatedCString	OutputDebugStringA
+18026ee32	TerminatedCString	VirtualQuery
+18026ee42	TerminatedCString	VirtualProtect
+18026ee54	TerminatedCString	GetCurrentProcess
+18026ee68	TerminatedCString	FlushInstructionCache
+18026ee80	TerminatedCString	GetModuleHandleW
+18026ee94	TerminatedCString	K32GetModuleInformation
+18026eeae	TerminatedCString	GetProcAddress
+18026eec0	TerminatedCString	GetEnvironmentVariableW
+18026eeda	TerminatedCString	FindFirstFileW
+18026eeec	TerminatedCString	FindNextFileW
+18026eefc	TerminatedCString	GetFileAttributesW
+18026ef12	TerminatedCString	FindClose
+18026ef1e	TerminatedCString	CreateFileW
+18026ef2c	TerminatedCString	GetFileSizeEx
+18026ef3c	TerminatedCString	ReadFile
+18026ef48	TerminatedCString	DisableThreadLibraryCalls
+18026ef64	TerminatedCString	CreateThread
+18026ef74	TerminatedCString	ExitThread
+18026ef82	TerminatedCString	FreeLibraryAndExitThread
+18026ef9e	TerminatedCString	HeapCreate
+18026efac	TerminatedCString	HeapFree
+18026efb8	TerminatedCString	HeapDestroy
+18026efc6	TerminatedCString	OpenThread
+18026efd4	TerminatedCString	ResumeThread
+18026efe4	TerminatedCString	HeapReAlloc
+18026eff2	TerminatedCString	HeapAlloc
+18026effe	TerminatedCString	GetLastError
+18026f00e	TerminatedCString	SuspendThread
+18026f01e	TerminatedCString	GetThreadContext
+18026f032	TerminatedCString	SetThreadContext
+18026f046	TerminatedCString	VirtualFree
+18026f052	TerminatedCString	KERNEL32.dll
+18026f062	TerminatedCString	ReleaseSRWLockExclusive
+18026f07c	TerminatedCString	AcquireSRWLockExclusive
+18026f096	TerminatedCString	WakeAllConditionVariable
+18026f0b2	TerminatedCString	SleepConditionVariableSRW
+18026f0ce	TerminatedCString	RtlCaptureContext
+18026f0e2	TerminatedCString	RtlLookupFunctionEntry
+18026f0fc	TerminatedCString	RtlVirtualUnwind
+18026f110	TerminatedCString	UnhandledExceptionFilter
+18026f12c	TerminatedCString	SetUnhandledExceptionFilter
+18026f14a	TerminatedCString	TerminateProcess
+18026f15e	TerminatedCString	IsProcessorFeaturePresent
+18026f17a	TerminatedCString	IsDebuggerPresent
+18026f18e	TerminatedCString	GetStartupInfoW
+18026f1a0	TerminatedCString	GetSystemTimeAsFileTime
+18026f1ba	TerminatedCString	InitializeSListHead
+18026f1d0	TerminatedCString	CreateDirectoryW
+18026f1e4	TerminatedCString	FindFirstFileExW
+18026f1f8	TerminatedCString	GetFileAttributesExW
+18026f210	TerminatedCString	SetFileInformationByHandle
+18026f22e	TerminatedCString	GetTempPathW
+18026f23e	TerminatedCString	AreFileApisANSI
+18026f250	TerminatedCString	GetFileInformationByHandleEx
+18026f270	TerminatedCString	MultiByteToWideChar
+18026f286	TerminatedCString	LocalFree
+18026f292	TerminatedCString	FormatMessageA
+18026f2a4	TerminatedCString	GetLocaleInfoEx
+18026f2b6	TerminatedCString	TryAcquireSRWLockExclusive
+18026f2d4	TerminatedCString	ReleaseSRWLockShared
+18026f2ec	TerminatedCString	AcquireSRWLockShared
+18026f304	TerminatedCString	SetLastError
+18026f314	TerminatedCString	LoadLibraryExW
+18026f326	TerminatedCString	GetStringTypeW
+18026f338	TerminatedCString	EncodePointer
+18026f348	TerminatedCString	DecodePointer
+18026f358	TerminatedCString	EnterCriticalSection
+18026f370	TerminatedCString	LeaveCriticalSection
+18026f388	TerminatedCString	InitializeCriticalSectionEx
+18026f3a6	TerminatedCString	DeleteCriticalSection
+18026f3be	TerminatedCString	LCMapStringEx
+18026f3ce	TerminatedCString	GetCPInfo
+18026f3da	TerminatedCString	RtlUnwindEx
+18026f3e8	TerminatedCString	RtlPcToFileHeader
+18026f3fc	TerminatedCString	RaiseException
+18026f40e	TerminatedCString	InterlockedFlushSList
+18026f426	TerminatedCString	InitializeCriticalSectionAndSpinCount
+18026f44e	TerminatedCString	TlsAlloc
+18026f45a	TerminatedCString	TlsGetValue
+18026f468	TerminatedCString	TlsSetValue
+18026f476	TerminatedCString	TlsFree
+18026f480	TerminatedCString	FreeLibrary
+18026f48e	TerminatedCString	ExitProcess
+18026f49c	TerminatedCString	WriteFile
+18026f4a8	TerminatedCString	GetConsoleOutputCP
+18026f4be	TerminatedCString	GetConsoleMode
+18026f4d0	TerminatedCString	SetFilePointerEx
+18026f4e4	TerminatedCString	FlsAlloc
+18026f4f0	TerminatedCString	FlsGetValue
+18026f4fe	TerminatedCString	FlsSetValue
+18026f50c	TerminatedCString	FlsFree
+18026f516	TerminatedCString	GetDateFormatW
+18026f528	TerminatedCString	GetTimeFormatW
+18026f53a	TerminatedCString	CompareStringW
+18026f54c	TerminatedCString	LCMapStringW
+18026f55c	TerminatedCString	GetLocaleInfoW
+18026f56e	TerminatedCString	IsValidLocale
+18026f57e	TerminatedCString	GetUserDefaultLCID
+18026f594	TerminatedCString	EnumSystemLocalesW
+18026f5aa	TerminatedCString	GetStdHandle
+18026f5ba	TerminatedCString	GetFileType
+18026f5c8	TerminatedCString	ReadConsoleW
+18026f5d8	TerminatedCString	FlushFileBuffers
+18026f5ec	TerminatedCString	GetTimeZoneInformation
+18026f606	TerminatedCString	IsValidCodePage
+18026f618	TerminatedCString	GetACP
+18026f622	TerminatedCString	GetOEMCP
+18026f62e	TerminatedCString	GetCommandLineA
+18026f640	TerminatedCString	GetCommandLineW
+18026f652	TerminatedCString	GetEnvironmentStringsW
+18026f66c	TerminatedCString	FreeEnvironmentStringsW
+18026f686	TerminatedCString	SetEnvironmentVariableW
+18026f6a0	TerminatedCString	GetProcessHeap
+18026f6b2	TerminatedCString	SetStdHandle
+18026f6c2	TerminatedCString	HeapSize
+18026f6ce	TerminatedCString	WriteConsoleW
+18026f6de	TerminatedCString	SetEndOfFile
+18026f6ee	TerminatedCString	RegCloseKey
+18026f6fc	TerminatedCString	RegOpenKeyExW
+18026f70c	TerminatedCString	RegQueryValueExW
+18026f71e	TerminatedCString	ADVAPI32.dll
+18026f72e	TerminatedCString	RtlUnwind
+180271308	string	default
+1802a031c	string	@@@@AI@@@@LB@@@@@@@@ODS@@@DWC\@`@@@@@@@@@@@@@@dfnk@@jF@@DF@@[D@@
+1802a0cea	string	abcdefghijklmnopqrstuvwxyz
+1802a0d0a	string	ABCDEFGHIJKLMNOPQRSTUVWXYZ
+1802a0f11	string	abcdefghijklmnopqrstuvwxyz
+1802a0f31	string	ABCDEFGHIJKLMNOPQRSTUVWXYZ
+18035e4f8	TerminatedCString	<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\r\n<assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'>\r\n  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">\r\n    <security>\r\n      <requestedPrivileges>\r\n        <requestedExecutionLevel level='asInvoker' uiAccess='false' />\r\n      </requestedPrivileges>\r\n    </security>\r\n  </trustInfo>\r\n</assembly>\r\n
